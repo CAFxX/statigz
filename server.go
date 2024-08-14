@@ -474,7 +474,10 @@ func GzipEncoding() Encoding {
 		},
 		Encoder: func(r io.Reader) ([]byte, error) {
 			res := bytes.NewBuffer(nil)
-			w := gzip.NewWriter(res)
+			w, err := gzip.NewWriterLevel(res, gzip.BestCompression)
+			if err != nil {
+				return nil, err
+			}
 
 			if _, err := io.Copy(w, r); err != nil {
 				return nil, err
